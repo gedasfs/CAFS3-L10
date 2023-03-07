@@ -1,0 +1,28 @@
+services:
+    nginx:
+        container_name: ca-l-nginx
+        image: nginx:1.23-alpine
+        volumes:
+            - ./docker/nginx/conf.d/default.conf:/etc/nginx/conf.d/default.conf
+            - ./src/public:/var/www/public
+        ports:
+            - 80:80
+
+    php:
+        container_name: ca-l-php
+        build: ./docker/php
+        working_dir: /var/www
+        volumes:
+            - ./src:/var/www
+        env_file:
+           - .env
+    
+    mariadb:
+        container_name: ca-l-mariadb
+        image: mariadb:11.0-rc
+        env_file:
+           - .env
+        volumes:
+            - ./docker/mysql/data/mariadb:/var/lib/mysql
+        ports:
+            - 3306:3306
